@@ -9,12 +9,15 @@ import com.example.umc10th.domain.member.exception.code.MemberErrorCode;
 import com.example.umc10th.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberService {
     private final MemberRepository memberRepository;
 
+    // 마이페이지
     public MemberResponseDTO.GetInfo getInfo(MemberRequestDTO.GetInfo dto) {
         Long memberId = dto.id();
         Member member = memberRepository.findById(memberId)
@@ -22,7 +25,19 @@ public class MemberService {
         return MemberConverter.toGetInfo(member);
     }
 
+    // 회원가입
+    @Transactional
     public MemberResponseDTO.JoinDto join(MemberRequestDTO.JoinDto request) {
+        Member member = Member.builder()
+                .name(request.name())
+                .email(request.email())
+                .password(request.password())
+                .phoneNumber(request.phone())
+                .address(request.address())
+                .build();
+
+        memberRepository.save(member);
+
         return MemberResponseDTO.JoinDto.builder()
                 .name(request.name())
                 .email(request.email())
@@ -32,6 +47,7 @@ public class MemberService {
                 .build();
     }
 
+    // 홈 화면 조회
     public MemberResponseDTO.HomeDto getHome(MemberRequestDTO.GetInfo dto) {
         Member member = memberRepository.findById(dto.id())
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_ERROR_CODE));
