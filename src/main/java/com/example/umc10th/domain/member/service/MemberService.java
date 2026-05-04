@@ -31,4 +31,14 @@ public class MemberService {
                 .address(request.address())
                 .build();
     }
+
+    public MemberResponseDTO.HomeDto getHome(MemberRequestDTO.GetInfo dto) {
+        Member member = memberRepository.findById(dto.id())
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_ERROR_CODE));
+
+        return MemberResponseDTO.HomeDto.builder()
+                .nickname(member.getName())
+                .point(member.getPoint())
+                .build();
+    }
 }

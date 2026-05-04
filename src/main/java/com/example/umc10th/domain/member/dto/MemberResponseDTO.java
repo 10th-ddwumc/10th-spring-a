@@ -21,4 +21,10 @@ public class MemberResponseDTO {
             String phone,
             String address
     ) {}
+
+    @Builder
+    public record HomeDto(
+            String nickname,
+            Integer point
+    ) {}
 }

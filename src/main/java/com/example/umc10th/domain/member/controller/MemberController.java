@@ -35,4 +35,15 @@ public class MemberController {
                 memberService.join(request)
         );
     }
+
+    // 홈화면 조회
+    @GetMapping("/home")
+    public ApiResponse<MemberResponseDTO.HomeDto> getHome(
+            @RequestBody MemberRequestDTO.GetInfo dto
+    ) {
+        return ApiResponse.onSuccess(
+                MemberSuccessCode.OK,
+                memberService.getHome(dto)
+        );
+    }
 }
