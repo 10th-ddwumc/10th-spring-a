@@ -12,4 +12,13 @@ public class MemberResponseDTO {
             String phoneNumber,
             Integer point
     ){}
+
+    @Builder
+    public record JoinDto(
+            String name,
+            String email,
+            String password,
+            String phone,
+            String address
+    ) {}
 }

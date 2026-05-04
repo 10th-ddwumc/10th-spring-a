@@ -24,4 +24,15 @@ public class MemberController {
         BaseSuccessCode code = MemberSuccessCode.OK;
         return ApiResponse.onSuccess(code, memberService.getInfo(dto));
     }
+
+    // 회원가입
+    @PostMapping("/users")
+    public ApiResponse<MemberResponseDTO.JoinDto> join(
+            @RequestBody MemberRequestDTO.JoinDto request
+    ) {
+        return ApiResponse.onSuccess(
+                MemberSuccessCode.OK,
+                memberService.join(request)
+        );
+    }
 }

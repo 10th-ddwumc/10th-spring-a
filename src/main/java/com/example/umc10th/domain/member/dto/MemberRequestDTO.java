@@ -5,4 +5,13 @@ public class MemberRequestDTO {
     public record GetInfo(
             Long id
     ){}
+
+    // 회원가입
+    public record JoinDto(
+            String name,
+            String email,
+            String password,
+            String phone,
+            String address
+    ) {}
 }

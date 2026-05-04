@@ -21,4 +21,14 @@ public class MemberService {
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_ERROR_CODE));
         return MemberConverter.toGetInfo(member);
     }
+
+    public MemberResponseDTO.JoinDto join(MemberRequestDTO.JoinDto request) {
+        return MemberResponseDTO.JoinDto.builder()
+                .name(request.name())
+                .email(request.email())
+                .password(request.password())
+                .phone(request.phone())
+                .address(request.address())
+                .build();
+    }
 }
