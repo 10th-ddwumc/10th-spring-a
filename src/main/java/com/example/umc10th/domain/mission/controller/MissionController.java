@@ -37,4 +37,24 @@ public class MissionController {
                 missionService.participateMission(missionId, memberId)
         );
     }
+
+    // 미션 목록 조회
+    @GetMapping("/me/missions")
+    public ApiResponse<MissionResponseDTO.GetMissionListDto> getMyMissions() {
+        return ApiResponse.onSuccess(
+                MissionSuccessCode.OK,
+                missionService.getMyMissions()
+        );
+    }
+
+    // 미션 성공
+    @PatchMapping("/me/missions/{userMissionId}/complete")
+    public ApiResponse<MissionResponseDTO.CompleteDto> completeMission(
+            @PathVariable Long userMissionId
+    ) {
+        return ApiResponse.onSuccess(
+                MissionSuccessCode.OK,
+                missionService.completeMission(userMissionId)
+        );
+    }
 }

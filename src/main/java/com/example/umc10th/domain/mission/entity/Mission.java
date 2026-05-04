@@ -1,6 +1,5 @@
 package com.example.umc10th.domain.mission.entity;
 
-import com.example.umc10th.domain.store.entity.Store;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
