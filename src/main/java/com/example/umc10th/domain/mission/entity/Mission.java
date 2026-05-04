@@ -1,6 +1,8 @@
 package com.example.umc10th.domain.mission.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +11,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class Mission {
 
@@ -23,7 +27,7 @@ public class Mission {
 
     private Integer point;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
@@ -31,8 +35,4 @@ public class Mission {
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "store_id")
-//    private Store store;
 }
