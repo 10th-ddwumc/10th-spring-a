@@ -1,8 +1,11 @@
 package com.example.umc10th.domain.mission.entity;
 
+import com.example.umc10th.domain.member.entity.mapping.MemberMission;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -29,4 +32,9 @@ public class Mission {
 
     @Column(nullable = false)
     private String conditional;
+
+    // 연관 관계
+    @OneToMany(mappedBy = "mission")
+    private List<MemberMission> memberMissionList = new ArrayList<>();
+
 }

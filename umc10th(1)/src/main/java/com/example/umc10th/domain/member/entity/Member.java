@@ -1,11 +1,16 @@
 package com.example.umc10th.domain.member.entity;
 
+import com.example.umc10th.domain.member.entity.mapping.MemberMission;
+import com.example.umc10th.domain.member.enums.Gender;
+import com.example.umc10th.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -14,33 +19,33 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Member {
+@Table(name = "member")
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 20)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(length = 10)
-    private String gender;
+    @Column(name = "gender", length = 10, nullable = false)
+    @Builder.Default
+    private Gender gender = Gender.NONE;
 
+    @Column(name = "birth", nullable = false)
     private LocalDate birth;
 
-    @Column(length = 100)
+    @Column(name = "address", nullable = false)
     private String address;
 
-    @Column(length = 50)
+    @Column(name = "email" , nullable = false)
     private String email;
 
-    @Column(length = 20)
+    @Column(name = "phone_number",  nullable = false)
     private String phoneNumber;
 
-    // 생성일자, 수정일자, 삭제일자
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
-
-    private LocalDateTime deletedAt;
+    // 연관 관계
+    @OneToMany(mappedBy = "member")
+    private List<MemberMission> memberMissions = new ArrayList<>();
 }
