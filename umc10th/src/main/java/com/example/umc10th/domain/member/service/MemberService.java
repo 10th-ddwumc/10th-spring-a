@@ -1,7 +1,6 @@
 package com.example.umc10th.domain.member.service;
 
 import com.example.umc10th.domain.member.converter.MemberConverter;
-import com.example.umc10th.domain.member.dto.MemberReqDTO;
 import com.example.umc10th.domain.member.dto.MemberResDTO;
 import com.example.umc10th.domain.member.entity.Member;
 import com.example.umc10th.domain.member.exception.MemberException;
@@ -16,8 +15,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    public MemberResDTO.GetInfo getInfo(MemberReqDTO.GetInfo dto) {
-        Long memberId = dto.id();
+    public MemberResDTO.GetInfo getInfo(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
         return MemberConverter.toGetInfo(member);

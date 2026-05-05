@@ -5,8 +5,12 @@ import java.time.LocalDateTime;
 
 public class ReviewResDTO {
     @Builder
-    public record CreateReviewResultDto(
+    public record ReviewCreateResDTO(
             Long reviewId,
+            Long missionId,
+            Float star,
+            String content,
+            String pictureUrl,
             LocalDateTime createdAt
     ) {}
 }

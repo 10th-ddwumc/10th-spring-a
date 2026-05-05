@@ -1,18 +1,24 @@
 package com.example.umc10th.domain.review.controller;
 
+import com.example.umc10th.domain.member.exception.code.MemberSuccessCode;
 import com.example.umc10th.domain.review.dto.ReviewReqDTO;
 import com.example.umc10th.domain.review.dto.ReviewResDTO;
+import com.example.umc10th.domain.review.service.ReviewService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/stores")
+@RequestMapping("/api/reviews")
+@RequiredArgsConstructor
 public class ReviewController {
 
-    @PostMapping("/{storeId}/reviews")
-    public ApiResponse<ReviewResDTO.CreateReviewResultDto> createReview(
-            @PathVariable Long storeId,
-            @RequestBody ReviewReqDTO.CreateReviewDto request) {
-        return null; // Service 로직 연동 시 반환값 수정
+    private final ReviewService reviewService;
+
+    @PostMapping("/{missionId}")
+    public ApiResponse<ReviewResDTO.ReviewCreateResDTO> createReview(
+            @PathVariable("missionId") Long missionId,
+            @RequestBody ReviewReqDTO.ReviewCreateReqDTO request) {
+        return ApiResponse.onSuccess(MemberSuccessCode.OK, reviewService.createReview(missionId, request));
     }
 }
