@@ -5,6 +5,7 @@ import com.example.umc10th.domain.review.dto.ReviewReqDTO;
 import com.example.umc10th.domain.review.dto.ReviewResDTO;
 import com.example.umc10th.domain.review.service.ReviewService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
+import com.example.umc10th.global.apiPayload.code.BaseErrorCode;
 import com.example.umc10th.global.apiPayload.code.BaseSuccessCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,6 @@ public class ReviewController {
             @RequestBody ReviewReqDTO.ReviewCreateReqDTO request) {
 
         BaseSuccessCode code = MemberSuccessCode.OK;
-        return  ApiResponse.onSuccess(code, reviewService.createReview(missionId, request));
+        return  ApiResponse.onSuccess((BaseErrorCode) code, reviewService.createReview(missionId, request));
     }
 }

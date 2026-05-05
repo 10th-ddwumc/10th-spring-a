@@ -5,6 +5,7 @@ import com.example.umc10th.domain.member.exception.MemberException;
 import com.example.umc10th.domain.member.exception.code.MemberErrorCode;
 import com.example.umc10th.domain.member.repository.MemberRepository;
 import com.example.umc10th.domain.mission.entity.Mission;
+import com.example.umc10th.domain.mission.entity.Store;
 import com.example.umc10th.domain.mission.exception.MissionException;
 import com.example.umc10th.domain.mission.exception.code.MissionErrorCode;
 import com.example.umc10th.domain.mission.repository.MissionRepository;
@@ -16,6 +17,8 @@ import com.example.umc10th.domain.review.repository.ReviewRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import static com.example.umc10th.domain.mission.exception.code.MissionErrorCode.MISSION_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -31,21 +34,23 @@ public class ReviewService {
             ReviewReqDTO.ReviewCreateReqDTO request
     ) {
 
-        // 미션 조회 (없으면 예외)
+        // 미션 조회
         Mission mission = missionRepository.findById(missionId)
-                .orElseThrow(() -> new MissionException(MissionErrorCode.MISSION_NOT_FOUND));
+                .orElseThrow(() -> new MissionException(MISSION_NOT_FOUND));
 
-        // 유저 조회 (로그인 기반이면 필요)
-        Member member = memberRepository.findById(request.memberId())
+        // Store 가져오기
+        Store store = mission.getStore();
+
+        // 유저 조회
+        Member member = memberRepository.findById(request.getUserId())
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
         // 리뷰 생성
-        Review review = ReviewConverter.toEntity(request, mission, member);
+        Review review = ReviewConverter.toEntity(request, store, member);
 
         // 저장
         reviewRepository.save(review);
 
-        // 응답 DTO 변환
-        return ReviewConverter.toReviewCreateResDTO(review);
+        return ReviewConverter.toReviewCreateResDTO(review, missionId);
     }
 }
