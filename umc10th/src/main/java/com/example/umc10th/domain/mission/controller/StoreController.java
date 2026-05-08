@@ -1,34 +1,41 @@
-package com.example.umc10th.domain.home.controller;
+package com.example.umc10th.domain.mission.controller;
 
-import com.example.umc10th.domain.home.dto.HomeResDTO;
-import com.example.umc10th.domain.mission.service.MissionService;
+import com.example.umc10th.domain.mission.dto.MissionReqDTO;
+import com.example.umc10th.domain.mission.dto.MissionResDTO;
 import com.example.umc10th.domain.mission.exception.code.MissionSuccessCode;
 import com.example.umc10th.domain.mission.exception.code.MissionErrorCode;
+import com.example.umc10th.domain.mission.service.MissionService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
 import com.example.umc10th.global.apiPayload.exception.ProjectException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/home")
+@RequestMapping("/api/v1/stores")
 @RequiredArgsConstructor
-public class HomeController {
-
+public class StoreController {
     private final MissionService missionService;
 
-    @GetMapping
-    public ApiResponse<HomeResDTO.HomeMissionListDto> getHomeMissions(
-            @RequestHeader("memberId") Long memberId,
-            @RequestParam(name = "locationId") Long locationId,
+    @PostMapping("/{storeId}/missions")
+    public ApiResponse<String> createMission(
+            @PathVariable("storeId") Long storeId,
+            @RequestBody @Valid MissionReqDTO.CreateMission request) {
+        missionService.createStoreMission(storeId, request);
+        return ApiResponse.onSuccess(MissionSuccessCode.CREATED, null);
+    }
+
+    @GetMapping("/{storeId}/missions")
+    public ApiResponse<MissionResDTO.MissionListDto> getStoreMissions(
+            @PathVariable("storeId") Long storeId,
             @RequestParam(name = "page", defaultValue = "0") Integer page) {
-        return ApiResponse.onSuccess(MissionSuccessCode.OK, missionService.getHomeMissions(locationId, memberId, page));
+        return ApiResponse.onSuccess(MissionSuccessCode.OK, missionService.getStoreMissions(storeId, page));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ApiResponse<String> handleValidationException(MethodArgumentNotValidException e) {
         String errorMessage = e.getBindingResult().getFieldError().getDefaultMessage();
-        // 에러 해결: (BaseErrorCode, T) 2개 인자만 사용
         return ApiResponse.onFailure(MissionErrorCode.MISSION_NOT_FOUND, errorMessage);
     }
 

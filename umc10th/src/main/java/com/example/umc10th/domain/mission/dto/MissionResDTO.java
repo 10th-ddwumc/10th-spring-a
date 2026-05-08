@@ -6,6 +6,12 @@ import java.util.List;
 
 public class MissionResDTO {
     @Builder
+    public record GetMission(
+            Long missionId,
+            Integer point,
+            String conditional
+    ) {}
+    @Builder
     public record CreateMissionResultDto(
             Long missionId,
             LocalDateTime createdAt

@@ -5,14 +5,16 @@ import com.example.umc10th.domain.mission.entity.Store;
 import com.example.umc10th.domain.review.dto.ReviewReqDTO;
 import com.example.umc10th.domain.review.dto.ReviewResDTO;
 import com.example.umc10th.domain.review.entity.Review;
-import java.time.LocalDateTime;
+import org.springframework.data.domain.Slice;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ReviewConverter {
     public static Review toEntity(ReviewReqDTO.ReviewCreateReqDTO request, Store store, Member member) {
         return Review.builder()
                 .store(store)
                 .user(member)
-                .star(request.star()) // record는 메서드 형태로 호출합니다.
+                .star(request.star())
                 .content(request.content())
                 .pictureUrl(request.pictureUrl())
                 .build();
@@ -26,6 +28,24 @@ public class ReviewConverter {
                 .content(review.getContent())
                 .pictureUrl(review.getPictureUrl())
                 .createdAt(review.getCreatedAt())
+                .build();
+    }
+
+    public static ReviewResDTO.ReviewListDto toReviewListDto(Slice<Review> reviewSlice) {
+        List<ReviewResDTO.ReviewDto> reviewDtoList = reviewSlice.getContent().stream()
+                .map(review -> ReviewResDTO.ReviewDto.builder()
+                        .reviewId(review.getReviewId())
+                        .storeName(review.getStore().getLocation().getName())
+                        .star(review.getStar())
+                        .content(review.getContent())
+                        .createdAt(review.getCreatedAt())
+                        .build())
+                .collect(Collectors.toList());
+
+        return ReviewResDTO.ReviewListDto.builder()
+                .reviewList(reviewDtoList)
+                .listSize(reviewDtoList.size())
+                .hasNext(reviewSlice.hasNext())
                 .build();
     }
 }

@@ -3,13 +3,14 @@ package com.example.umc10th.domain.mission.entity;
 import com.example.umc10th.domain.mission.entity.mapping.MemberMission;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Mission {
     @Id
@@ -34,5 +35,6 @@ public class Mission {
     private String conditional;
 
     @OneToMany(mappedBy = "mission")
+    @Builder.Default
     private List<MemberMission> memberMissionList = new ArrayList<>();
 }
