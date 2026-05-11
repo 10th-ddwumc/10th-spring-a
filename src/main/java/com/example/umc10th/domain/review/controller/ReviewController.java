@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class ReviewController {
     @Operation(summary = "리뷰 작성 API", description = "가게 ID, 별점, 내용 및 사진 URL 등을 받아 리뷰를 등록합니다.")
     @PostMapping
     public ApiResponse<ReviewResponseDTO.CreateDto> createReview(
-            @RequestBody ReviewRequestDTO.ReviewCreateDto request
+            @RequestBody @Valid ReviewRequestDTO.ReviewCreateDto request
     ) {
         return ApiResponse.onSuccess(
                 ReviewSuccessCode.OK,
