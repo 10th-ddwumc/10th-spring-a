@@ -17,17 +17,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Member {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+private Long id;
 
-    private String name;
-
-    private String email;
-
-    private Integer point;
-
-    private String phoneNumber;
-
-    private String profileUrl;
+private String name;
+private String email;
+private String password;
+private String role;
+private Integer point;
+private String phoneNumber;
+private String profileUrl;
 }
