@@ -25,6 +25,8 @@ public class MemberResponseDTO {
     @Builder
     public record HomeDto(
             String nickname,
-            Integer point
+            Integer point,
+            Integer successCount,
+            Integer availableMissions
     ) {}
 }

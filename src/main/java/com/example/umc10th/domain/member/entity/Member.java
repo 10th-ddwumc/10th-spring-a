@@ -1,5 +1,6 @@
 package com.example.umc10th.domain.member.entity;
 
+import com.example.umc10th.domain.mission.entity.Location;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -15,6 +16,10 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_id")
+    private Location location;
 
     @Column(nullable = false, length = 20)
     private String name;

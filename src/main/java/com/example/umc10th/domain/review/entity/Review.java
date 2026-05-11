@@ -1,6 +1,8 @@
 package com.example.umc10th.domain.review.entity;
 
 import com.example.umc10th.domain.member.entity.Member;
+import com.example.umc10th.domain.mission.entity.Store;
+import com.example.umc10th.global.apiPayload.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,12 +16,16 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Review {
+public class Review extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id")
+    private Store store;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
@@ -34,13 +40,4 @@ public class Review {
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<ReviewPhoto> reviewImages = new ArrayList<>();
-
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
 }

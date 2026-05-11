@@ -2,6 +2,7 @@ package com.example.umc10th.domain.mission.entity.mapping;
 
 import com.example.umc10th.domain.member.entity.Member;
 import com.example.umc10th.domain.mission.entity.Mission;
+import com.example.umc10th.domain.mission.enums.MissionStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +27,9 @@ public class MemberMission {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mission_id")
     private Mission mission;
+
+    @Enumerated(EnumType.STRING)
+    private MissionStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")

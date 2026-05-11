@@ -2,17 +2,22 @@ package com.example.umc10th.domain.mission.service;
 
 import com.example.umc10th.domain.member.entity.Member;
 import com.example.umc10th.domain.member.repository.MemberRepository;
+import com.example.umc10th.domain.mission.converter.MissionConverter;
 import com.example.umc10th.domain.mission.dto.MissionRequestDTO;
 import com.example.umc10th.domain.mission.dto.MissionResponseDTO;
 import com.example.umc10th.domain.mission.entity.Mission;
 import com.example.umc10th.domain.mission.entity.mapping.MemberMission;
+import com.example.umc10th.domain.mission.enums.MissionStatus;
 import com.example.umc10th.domain.mission.repository.MemberMissionRepository;
 import com.example.umc10th.domain.mission.repository.MissionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -62,10 +67,22 @@ public class MissionServiceImpl implements MissionService {
         return new MissionResponseDTO.ParticipateDto(missionId, memberId, false);
     }
 
-    // 미션 목록 조회
+    // 미션 목록 조회 (진행 중 / 진행 완료 구분)
     @Override
-    public MissionResponseDTO.GetMissionListDto getMyMissions() {
-        return null;
+    public MissionResponseDTO.GetMissionListDto getMyMissions(Long memberId, String status, Integer page) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("해당 유저를 찾을 수 없습니다."));
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+        Boolean isComplete = status.equalsIgnoreCase("COMPLETE");
+
+        Page<MemberMission> missionPage = memberMissionRepository.findByMemberIdAndIsComplete(
+                memberId,
+                isComplete,
+                pageRequest
+        );
+
+        return MissionConverter.toGetMissionListDto(missionPage);
     }
 
     // 미션 성공

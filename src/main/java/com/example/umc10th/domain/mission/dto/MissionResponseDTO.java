@@ -24,14 +24,17 @@ public class MissionResponseDTO {
             Boolean isComplete
     ) {}
 
+    @Builder
     public record GetMissionListDto(
-            List<MissionDto> missions
+            List<MissionDto> challengingMissionList,
+            List<MissionDto> completedMissionList
     ) {}
 
     @Builder
     public record MissionDto(
             Long userMissionId,
             Long missionId,
+            String storeName,
             String conditional,
             Integer point,
             LocalDate deadline,

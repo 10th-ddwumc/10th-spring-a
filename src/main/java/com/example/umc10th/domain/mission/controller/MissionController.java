@@ -39,11 +39,15 @@ public class MissionController {
     }
 
     // 미션 목록 조회
-    @GetMapping("/me/missions")
-    public ApiResponse<MissionResponseDTO.GetMissionListDto> getMyMissions() {
+    @GetMapping("/me")
+    public ApiResponse<MissionResponseDTO.GetMissionListDto> getMyMissions(
+            @RequestParam(name = "memberId") Long memberId,
+            @RequestParam(name = "status") String status, // "CHALLENGING" 또는 "COMPLETE"
+            @RequestParam(name = "page", defaultValue = "0") Integer page
+    ) {
         return ApiResponse.onSuccess(
                 MissionSuccessCode.OK,
-                missionService.getMyMissions()
+                missionService.getMyMissions(memberId, status, page)
         );
     }
 

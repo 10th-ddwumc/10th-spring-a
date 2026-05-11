@@ -7,15 +7,25 @@ import com.example.umc10th.domain.member.entity.Member;
 import com.example.umc10th.domain.member.exception.MemberException;
 import com.example.umc10th.domain.member.exception.code.MemberErrorCode;
 import com.example.umc10th.domain.member.repository.MemberRepository;
+import com.example.umc10th.domain.mission.entity.Mission;
+import com.example.umc10th.domain.mission.enums.MissionStatus;
+import com.example.umc10th.domain.mission.repository.MemberMissionRepository;
+import com.example.umc10th.domain.mission.repository.MissionRepository;
+import com.example.umc10th.domain.mission.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final MissionRepository missionRepository;
+    private final MemberMissionRepository memberMissionRepository;
+    private final StoreRepository storeRepository;
 
     // 마이페이지
     public MemberResponseDTO.GetInfo getInfo(MemberRequestDTO.GetInfo dto) {
@@ -52,9 +62,15 @@ public class MemberService {
         Member member = memberRepository.findById(dto.id())
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_ERROR_CODE));
 
-        return MemberResponseDTO.HomeDto.builder()
-                .nickname(member.getName())
-                .point(member.getPoint())
-                .build();
+        // 성공한 미션 개수 조회
+        Integer successCount = memberMissionRepository.countByMemberAndStatus(member, MissionStatus.COMPLETE);
+
+        // 사용자의 지역 정보 가져오기
+        List<Mission> availableMissions = missionRepository.findAvailableMissionsByLocation(
+                member.getLocation(),
+                member.getId()
+        );
+
+        return MemberConverter.toHomeDto(member, successCount, availableMissions);
     }
 }
