@@ -22,7 +22,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public ReviewResponseDTO.CreateDto createReview(ReviewRequestDTO.CreateDto request) {
+    public ReviewResponseDTO.CreateDto createReview(ReviewRequestDTO.ReviewCreateDto request) {
 
         Member member = memberRepository.findById(request.userId())
                 .orElseThrow(() -> new RuntimeException("해당 회원이 존재하지 않습니다."));

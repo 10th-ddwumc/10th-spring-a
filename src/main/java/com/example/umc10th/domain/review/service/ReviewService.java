@@ -6,5 +6,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface ReviewService {
-    ReviewResponseDTO.CreateDto createReview(ReviewRequestDTO.CreateDto request);
+    ReviewResponseDTO.CreateDto createReview(ReviewRequestDTO.ReviewCreateDto request);
 }

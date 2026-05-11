@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public class ReviewRequestDTO {
-    public record CreateDto(
+    public record ReviewCreateDto(
             Long storeId,
             Long userId,
             String content,

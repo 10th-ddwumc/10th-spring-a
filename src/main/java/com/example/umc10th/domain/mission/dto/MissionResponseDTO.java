@@ -26,8 +26,12 @@ public class MissionResponseDTO {
 
     @Builder
     public record GetMissionListDto(
-            List<MissionDto> challengingMissionList,
-            List<MissionDto> completedMissionList
+            List<MissionDto> missionList,
+            Integer listSize,
+            Integer totalPage,
+            Long totalElements,
+            Boolean isFirst,
+            Boolean isLast
     ) {}
 
     @Builder

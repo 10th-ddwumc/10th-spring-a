@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface MissionService {
-    MissionResponseDTO.CreateDto createMission(MissionRequestDTO.CreateDto request);
+    MissionResponseDTO.CreateDto createMission(MissionRequestDTO.MissionCreateDto request);
     MissionResponseDTO.ParticipateDto participateMission(Long missionId, Long memberId);
-    MissionResponseDTO.GetMissionListDto getMyMissions(Long memberId, String status, Integer page);
+    MissionResponseDTO.GetMissionListDto getMyMissions(MissionRequestDTO.GetMyMissionsDto request);
     MissionResponseDTO.CompleteDto completeMission(Long userMissionId);
 }

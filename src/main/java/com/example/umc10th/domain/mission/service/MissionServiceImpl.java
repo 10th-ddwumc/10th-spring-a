@@ -7,7 +7,6 @@ import com.example.umc10th.domain.mission.dto.MissionRequestDTO;
 import com.example.umc10th.domain.mission.dto.MissionResponseDTO;
 import com.example.umc10th.domain.mission.entity.Mission;
 import com.example.umc10th.domain.mission.entity.mapping.MemberMission;
-import com.example.umc10th.domain.mission.enums.MissionStatus;
 import com.example.umc10th.domain.mission.repository.MemberMissionRepository;
 import com.example.umc10th.domain.mission.repository.MissionRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +29,7 @@ public class MissionServiceImpl implements MissionService {
     // 미션 생성
     @Override
     @Transactional
-    public MissionResponseDTO.CreateDto createMission(MissionRequestDTO.CreateDto request) {
+    public MissionResponseDTO.CreateDto createMission(MissionRequestDTO.MissionCreateDto request) {
         Mission mission = Mission.builder()
                 .deadline(request.deadline())
                 .conditional(request.conditional())
@@ -69,15 +67,15 @@ public class MissionServiceImpl implements MissionService {
 
     // 미션 목록 조회 (진행 중 / 진행 완료 구분)
     @Override
-    public MissionResponseDTO.GetMissionListDto getMyMissions(Long memberId, String status, Integer page) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new RuntimeException("해당 유저를 찾을 수 없습니다."));
+    public MissionResponseDTO.GetMissionListDto getMyMissions(MissionRequestDTO.GetMyMissionsDto request) {
+        memberRepository.findById(request.memberId()).orElseThrow();
 
-        PageRequest pageRequest = PageRequest.of(page, 10);
-        Boolean isComplete = status.equalsIgnoreCase("COMPLETE");
+        PageRequest pageRequest = PageRequest.of(request.page(), request.size());
+
+        Boolean isComplete = "COMPLETE".equalsIgnoreCase(request.status());
 
         Page<MemberMission> missionPage = memberMissionRepository.findByMemberIdAndIsComplete(
-                memberId,
+                request.memberId(),
                 isComplete,
                 pageRequest
         );

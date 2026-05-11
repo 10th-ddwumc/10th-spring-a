@@ -28,7 +28,12 @@ public class MissionConverter {
                 .collect(Collectors.toList());
 
         return MissionResponseDTO.GetMissionListDto.builder()
-                .challengingMissionList(missionDtoList)
+                .missionList(missionDtoList)
+                .listSize(missionDtoList.size())
+                .totalPage(missionPage.getTotalPages())
+                .totalElements(missionPage.getTotalElements())
+                .isFirst(missionPage.isFirst())
+                .isLast(missionPage.isLast())
                 .build();
     }
 }
