@@ -12,4 +12,10 @@ public class ReviewRequestDTO {
             List<String> photoUrls
     ) {}
 
+    public record GetMyReviewsDto(
+            Long memberId,
+            Long lastReviewId,
+            BigDecimal lastRating,
+            Integer size
+    ) {}
 }

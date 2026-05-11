@@ -6,6 +6,8 @@ import com.example.umc10th.domain.review.exception.code.ReviewSuccessCode;
 import com.example.umc10th.domain.review.service.ReviewService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +29,19 @@ public class ReviewController {
         return ApiResponse.onSuccess(
                 ReviewSuccessCode.OK,
                 reviewService.createReview(request)
+        );
+    }
+
+    @Operation(summary = "내가 작성한 리뷰 목록 조회 API", description = "사용자가 작성한 리뷰 목록을 커서 기반 페이지네이션으로 조회합니다.")
+    @PostMapping("/me")
+    public ApiResponse<ReviewResponseDTO.GetReviewListDto> getMyReviews(
+            @RequestBody ReviewRequestDTO.GetMyReviewsDto request,
+            @Parameter(description = "정렬 기준 (id: 최신순, rating: 별점순)")
+            @RequestParam(name = "sort", defaultValue = "id") String sort
+    ) {
+        return ApiResponse.onSuccess(
+                ReviewSuccessCode.OK,
+                reviewService.getMyReviews(request, sort)
         );
     }
 }

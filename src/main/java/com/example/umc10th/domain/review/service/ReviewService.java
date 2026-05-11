@@ -7,4 +7,5 @@ import org.springframework.stereotype.Service;
 @Service
 public interface ReviewService {
     ReviewResponseDTO.CreateDto createReview(ReviewRequestDTO.ReviewCreateDto request);
+    ReviewResponseDTO.GetReviewListDto getMyReviews(ReviewRequestDTO.GetMyReviewsDto request, String sort);
 }
