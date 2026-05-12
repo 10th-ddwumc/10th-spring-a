@@ -7,7 +7,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface MissionRepository extends JpaRepository<Mission, Long> {
+
+    List<Mission> findAllByStore_Id(Long storeId);
+
+    Page<Mission> findAllByStore_Id(Long storeId, Pageable pageable);
 
     @Query(
             value = """
@@ -16,7 +22,7 @@ public interface MissionRepository extends JpaRepository<Mission, Long> {
                     JOIN m.store s
                     JOIN s.region r
                     WHERE r.id = :regionId
-                    AND m.deadline >= CURRENT_TIMESTAMP
+                    AND m.deadline >= CURRENT_DATE
                     AND NOT EXISTS (
                         SELECT mm
                         FROM MemberMission mm
@@ -30,7 +36,7 @@ public interface MissionRepository extends JpaRepository<Mission, Long> {
                     JOIN m.store s
                     JOIN s.region r
                     WHERE r.id = :regionId
-                    AND m.deadline >= CURRENT_TIMESTAMP
+                    AND m.deadline >= CURRENT_DATE
                     AND NOT EXISTS (
                         SELECT mm
                         FROM MemberMission mm

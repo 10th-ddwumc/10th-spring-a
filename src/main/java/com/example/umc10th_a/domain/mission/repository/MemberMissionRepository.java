@@ -26,7 +26,7 @@ public interface MemberMissionRepository extends JpaRepository<MemberMission, Lo
                     AND mm.status = :status
                     """
     )
-    Page<MemberMission> findMyMissions(
+    Page<MemberMission> findMyMissionsByMemberIdAndStatus(
             @Param("memberId") Long memberId,
             @Param("status") MissionStatus status,
             Pageable pageable

@@ -5,7 +5,7 @@ import com.example.umc10th_a.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -19,14 +19,14 @@ public class Mission extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "reward", nullable = false)
-    private Integer reward;
-
-    @Column(name = "mission_spec", nullable = false)
-    private String missionSpec;
-
     @Column(name = "deadline", nullable = false)
-    private LocalDateTime deadline;
+    private LocalDate deadline;
+
+    @Column(name = "point", nullable = false)
+    private Integer point;
+
+    @Column(name = "conditional", nullable = false)
+    private String conditional;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)
