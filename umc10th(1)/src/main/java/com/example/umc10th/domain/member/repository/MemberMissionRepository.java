@@ -8,4 +8,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface MemberMissionRepository extends JpaRepository<MemberMission, Long> {
 
     Page<MemberMission> findByMemberIdAndIsCompleteFalse(Long memberId, Pageable pageable);
+
+    Page<MemberMission> findByMemberIdAndIsComplete(
+            Long memberId,
+            Boolean isComplete,
+            Pageable pageable
+    );
 }

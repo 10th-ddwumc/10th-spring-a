@@ -35,14 +35,22 @@ public class MissionController {
         return ResponseEntity.ok().build();
     }
 
-    // 내가 진행중인 미션 조회
-    @PostMapping("/ongoing")
-    public ApiResponse<MissionResDTO.MissionListResDTO> getOngoingMissions(
-            @RequestBody MissionReqDTO.OngoingMissionReqDTO req
+    // 상태별 미션 조회
+    @GetMapping("/status")
+    public ApiResponse<MissionResDTO.MissionListResDTO> getMissionsByStatus(
+            @RequestParam Long memberId,
+            @RequestParam String status,
+            @RequestParam int page,
+            @RequestParam int size
     ) {
         return ApiResponse.onSuccess(
                 MemberSuccessCode.OK,
-                missionService.getOngoingMissions(req)
+                missionService.getMissionsByStatus(
+                        memberId,
+                        status,
+                        page,
+                        size
+                )
         );
     }
 }

@@ -19,6 +19,6 @@ public class Reply {
     private String content;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "review_picture_id")
-    private ReviewPhoto reviewPhoto;
+    @JoinColumn(name = "review_id")
+    private Review review;
 }

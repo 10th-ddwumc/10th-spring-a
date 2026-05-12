@@ -44,4 +44,7 @@ public class Review {
 
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
     private List<ReviewPhoto> reviewPhotos = new ArrayList<>();
+
+    @OneToOne(mappedBy = "review", cascade = CascadeType.ALL)
+    private Reply reply;
 }

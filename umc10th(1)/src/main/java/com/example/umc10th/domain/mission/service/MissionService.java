@@ -80,4 +80,33 @@ public class MissionService {
         Page<Mission> missionPage = missionRepository.findMissions(pageable);
         return MissionConverter.toMissionListDTO(missionPage);
     }
+
+    // 상태별 미션 목록 조회
+    public MissionResDTO.MissionListResDTO getMissionsByStatus(
+            Long memberId,
+            String status,
+            int page,
+            int size
+    ) {
+        Boolean isComplete = switch (status.toUpperCase()) {
+            case "ONGOING" -> false;
+            case "COMPLETE" -> true;
+            default -> throw new IllegalArgumentException("지원하지 않는 미션 상태입니다.");
+        };
+
+        Pageable pageable = PageRequest.of(
+                page - 1,
+                size,
+                Sort.by("id").descending()
+        );
+
+        Page<MemberMission> memberMissionPage =
+                memberMissionRepository.findByMemberIdAndIsComplete(
+                        memberId,
+                        isComplete,
+                        pageable
+                );
+
+        return MissionConverter.toOngoingMissionListDTO(memberMissionPage);
+    }
 }
