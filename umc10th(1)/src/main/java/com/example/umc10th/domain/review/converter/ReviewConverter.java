@@ -7,6 +7,7 @@ import com.example.umc10th.domain.review.dto.ReviewResDTO;
 import com.example.umc10th.domain.review.entity.Review;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ReviewConverter {
 
@@ -38,6 +39,39 @@ public class ReviewConverter {
                 .content(review.getContent())
                 .pictureUrl(review.getPictureUrl())
                 .createdAt(review.getCreatedAt())
+                .build();
+    }
+
+    public static ReviewResDTO.MyReviewItemDTO toMyReviewItemDTO(Review review) {
+        return ReviewResDTO.MyReviewItemDTO.builder()
+                .reviewId(review.getReviewId())
+                .star(review.getStar())
+                .content(review.getContent())
+                .createdAt(review.getCreatedAt())
+                .build();
+    }
+
+    public static ReviewResDTO.MyReviewListResDTO toMyReviewListDTO(
+            List<Review> reviews,
+            boolean hasNext
+    ) {
+        List<Review> resultReviews = hasNext
+                ? reviews.subList(0, reviews.size() - 1)
+                : reviews;
+
+        Review lastReview = resultReviews.isEmpty()
+                ? null
+                : resultReviews.get(resultReviews.size() - 1);
+
+        return ReviewResDTO.MyReviewListResDTO.builder()
+                .reviews(
+                        resultReviews.stream()
+                                .map(ReviewConverter::toMyReviewItemDTO)
+                                .toList()
+                )
+                .nextCursorId(lastReview == null ? null : lastReview.getReviewId())
+                .nextCursorStar(lastReview == null ? null : lastReview.getStar())
+                .hasNext(hasNext)
                 .build();
     }
 }

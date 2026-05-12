@@ -16,7 +16,11 @@ import com.example.umc10th.domain.review.entity.Review;
 import com.example.umc10th.domain.review.repository.ReviewRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static com.example.umc10th.domain.mission.exception.code.MissionErrorCode.MISSION_NOT_FOUND;
 
@@ -52,5 +56,48 @@ public class ReviewService {
         reviewRepository.save(review);
 
         return ReviewConverter.toReviewCreateResDTO(review, missionId);
+    }
+
+    // 내가 생성한 리뷰 조회
+    public ReviewResDTO.MyReviewListResDTO getMyReviews(
+            ReviewReqDTO.MyReviewListReqDTO request
+    ) {
+        int size = request.getSize();
+        Pageable pageable = PageRequest.of(0, size + 1);
+
+        List<Review> reviews;
+
+        if ("STAR".equalsIgnoreCase(request.getSort())) {
+            if (request.getCursorStar() == null || request.getCursorId() == null) {
+                reviews = reviewRepository.findByUserIdOrderByStarDescReviewIdDesc(
+                        request.getUserId(),
+                        pageable
+                );
+            } else {
+                reviews = reviewRepository.findMyReviewsByStarCursor(
+                        request.getUserId(),
+                        request.getCursorStar(),
+                        request.getCursorId(),
+                        pageable
+                );
+            }
+        } else {
+            if (request.getCursorId() == null) {
+                reviews = reviewRepository.findByUserIdOrderByReviewIdDesc(
+                        request.getUserId(),
+                        pageable
+                );
+            } else {
+                reviews = reviewRepository.findByUserIdAndReviewIdLessThanOrderByReviewIdDesc(
+                        request.getUserId(),
+                        request.getCursorId(),
+                        pageable
+                );
+            }
+        }
+
+        boolean hasNext = reviews.size() > size;
+
+        return ReviewConverter.toMyReviewListDTO(reviews, hasNext);
     }
 }

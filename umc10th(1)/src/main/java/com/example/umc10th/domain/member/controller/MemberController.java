@@ -25,7 +25,9 @@ public class MemberController {
     public ApiResponse<MemberResDTO.GetInfo> getInfo(
             @RequestBody MemberReqDTO.GetInfo dto
     ){
-        BaseSuccessCode code = MemberSuccessCode.OK;
-        return ApiResponse.onSuccess((BaseErrorCode) code, memberService.getInfo(dto));
+        return ApiResponse.onSuccess(
+                MemberSuccessCode.OK,
+                memberService.getInfo(dto)
+        );
     }
 }

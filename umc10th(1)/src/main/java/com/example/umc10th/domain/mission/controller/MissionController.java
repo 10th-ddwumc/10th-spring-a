@@ -1,6 +1,7 @@
 package com.example.umc10th.domain.mission.controller;
 
 import com.example.umc10th.domain.member.exception.code.MemberSuccessCode;
+import com.example.umc10th.domain.mission.dto.MissionReqDTO;
 import com.example.umc10th.domain.mission.dto.MissionResDTO;
 import com.example.umc10th.domain.mission.service.MissionService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
@@ -21,8 +22,10 @@ public class MissionController {
     @GetMapping
     public ApiResponse<MissionResDTO.MissionListResDTO> getMissions() {
 
-        BaseSuccessCode code = MemberSuccessCode.OK;
-        return ApiResponse.onSuccess((BaseErrorCode) code, missionService.getMissions());
+        return ApiResponse.onSuccess(
+                MemberSuccessCode.OK,
+                missionService.getMissions()
+        );
     }
 
     // 미션 성공 누르기
@@ -30,5 +33,16 @@ public class MissionController {
     public ResponseEntity<Void> completeMission(@PathVariable Long missionId) {
         missionService.completeMission(missionId);
         return ResponseEntity.ok().build();
+    }
+
+    // 내가 진행중인 미션 조회
+    @PostMapping("/ongoing")
+    public ApiResponse<MissionResDTO.MissionListResDTO> getOngoingMissions(
+            @RequestBody MissionReqDTO.OngoingMissionReqDTO req
+    ) {
+        return ApiResponse.onSuccess(
+                MemberSuccessCode.OK,
+                missionService.getOngoingMissions(req)
+        );
     }
 }

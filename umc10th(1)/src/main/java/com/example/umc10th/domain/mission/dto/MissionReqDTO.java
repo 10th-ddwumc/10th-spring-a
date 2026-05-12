@@ -10,4 +10,12 @@ public class MissionReqDTO {
         private int page;
         private int size;
     }
+
+    // 내가 진행중인 미션 조회
+    @Getter
+    public static class OngoingMissionReqDTO {
+        private Long memberId;
+        private int page;
+        private int size;
+    }
 }

@@ -45,6 +45,26 @@ public class MissionService {
         mm.complete();
     }
 
+    // 진행중인 미션 조회
+    public MissionResDTO.MissionListResDTO getOngoingMissions(
+            MissionReqDTO.OngoingMissionReqDTO req
+    ) {
+
+        Pageable pageable = PageRequest.of(
+                req.getPage() - 1,
+                req.getSize(),
+                Sort.by("id").descending()
+        );
+
+        Page<MemberMission> memberMissionPage =
+                memberMissionRepository.findByMemberIdAndIsCompleteFalse(
+                        req.getMemberId(),
+                        pageable
+                );
+
+        return MissionConverter.toOngoingMissionListDTO(memberMissionPage);
+    }
+
     // 페이징
     public MissionResDTO.MissionListResDTO getMissions(
             MissionReqDTO.MissionListReqDTO req
