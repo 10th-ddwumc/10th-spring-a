@@ -22,7 +22,4 @@ public class ReviewPhoto {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_id")
     private Review review;
-
-    @OneToOne(mappedBy = "reviewPhoto", cascade = CascadeType.ALL)
-    private Reply reply;
 }

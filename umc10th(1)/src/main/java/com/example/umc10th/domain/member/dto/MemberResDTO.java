@@ -1,6 +1,9 @@
 package com.example.umc10th.domain.member.dto;
 
 import lombok.Builder;
+import lombok.Getter;
+
+import java.time.LocalDateTime;
 
 public class MemberResDTO {
 
@@ -12,4 +15,11 @@ public class MemberResDTO {
             String phoneNumber,
             Integer point
     ){}
+
+    @Builder
+    @Getter
+    public static class JoinResultDTO {
+        private Long memberId;
+        private LocalDateTime createdAt;
+    }
 }

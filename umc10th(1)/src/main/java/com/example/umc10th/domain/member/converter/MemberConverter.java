@@ -12,4 +12,10 @@ public class MemberConverter {
                 .phoneNumber(member.getPhoneNumber())
                 .build();
     }
+
+    public static MemberResDTO.JoinResultDTO toJoinResultDTO(Member member) {
+        return MemberResDTO.JoinResultDTO.builder()
+                .memberId(member.getId())
+                .build();
+    }
 }
