@@ -12,10 +12,13 @@ import com.example.umc10th.domain.mission.enums.MissionStatus;
 import com.example.umc10th.domain.mission.repository.MemberMissionRepository;
 import com.example.umc10th.domain.mission.repository.MissionRepository;
 import com.example.umc10th.domain.mission.repository.StoreRepository;
+import com.example.umc10th.global.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -26,6 +29,8 @@ public class MemberService {
     private final MissionRepository missionRepository;
     private final MemberMissionRepository memberMissionRepository;
     private final StoreRepository storeRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
     // 마이페이지
     public MemberResponseDTO.GetInfo getInfo(MemberRequestDTO.GetInfo dto) {
@@ -38,10 +43,12 @@ public class MemberService {
     // 회원가입
     @Transactional
     public MemberResponseDTO.JoinDto join(MemberRequestDTO.JoinDto request) {
+        String encodedPassword = passwordEncoder.encode(request.password());
+
         Member member = Member.builder()
                 .name(request.name())
                 .email(request.email())
-                .password(request.password())
+                .password(encodedPassword)
                 .phoneNumber(request.phone())
                 .address(request.address())
                 .build();
@@ -72,5 +79,24 @@ public class MemberService {
         );
 
         return MemberConverter.toHomeDto(member, successCount, availableMissions);
+    }
+
+    // 로그인
+    @Transactional
+    public MemberResponseDTO.LoginResultDto login(MemberRequestDTO.LoginDto request) {
+        Member member = memberRepository.findByEmail(request.email())
+                .orElseThrow(() -> new RuntimeException("이메일 또는 비밀번호가 일치하지 않습니다."));
+
+        if (!passwordEncoder.matches(request.password(), member.getPassword())) {
+            throw new RuntimeException("이메일 또는 비밀번호가 일치하지 않습니다.");
+        }
+
+        String accessToken = jwtTokenProvider.createAccessToken(member.getId(), member.getEmail());
+
+        return MemberResponseDTO.LoginResultDto.builder()
+                .memberId(member.getId())
+                .accessToken(accessToken)
+                .createdAt(LocalDateTime.now())
+                .build();
     }
 }

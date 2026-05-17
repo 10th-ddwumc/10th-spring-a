@@ -1,5 +1,7 @@
 package com.example.umc10th.domain.member.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class MemberRequestDTO {
     // 마이페이지
     public record GetInfo(
@@ -13,5 +15,11 @@ public class MemberRequestDTO {
             String password,
             String phone,
             String address
+    ) {}
+
+    // 로그인
+    public record LoginDto(
+            @NotBlank String email,
+            @NotBlank String password
     ) {}
 }

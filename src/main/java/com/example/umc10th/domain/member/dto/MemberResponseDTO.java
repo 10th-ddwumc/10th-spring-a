@@ -2,6 +2,8 @@ package com.example.umc10th.domain.member.dto;
 
 import lombok.Builder;
 
+import java.time.LocalDateTime;
+
 public class MemberResponseDTO {
 
     @Builder
@@ -28,5 +30,12 @@ public class MemberResponseDTO {
             Integer point,
             Integer successCount,
             Integer availableMissions
+    ) {}
+
+    @Builder
+    public record LoginResultDto(
+            Long memberId,
+            String accessToken,
+            LocalDateTime createdAt
     ) {}
 }

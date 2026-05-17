@@ -7,6 +7,7 @@ import com.example.umc10th.domain.member.service.MemberService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,6 +48,17 @@ public class MemberController {
         return ApiResponse.onSuccess(
                 MemberSuccessCode.OK,
                 memberService.getHome(dto)
+        );
+    }
+
+    @Operation(summary = "로그인 API", description = "로그인에 필요한 데이터를 조회합니다.")
+    @PostMapping("/login")
+    public ApiResponse<MemberResponseDTO.LoginResultDto> login(
+            @RequestBody @Valid MemberRequestDTO.LoginDto request
+    ) {
+        return ApiResponse.onSuccess(
+                MemberSuccessCode.OK,
+                memberService.login(request)
         );
     }
 }
