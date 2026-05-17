@@ -7,17 +7,20 @@ import com.example.umc10th.domain.member.repository.MemberRepository;
 import com.example.umc10th.domain.mission.entity.Mission;
 import com.example.umc10th.domain.mission.entity.Store;
 import com.example.umc10th.domain.mission.exception.MissionException;
-import com.example.umc10th.domain.mission.exception.code.MissionErrorCode;
 import com.example.umc10th.domain.mission.repository.MissionRepository;
 import com.example.umc10th.domain.review.converter.ReviewConverter;
 import com.example.umc10th.domain.review.dto.ReviewReqDTO;
 import com.example.umc10th.domain.review.dto.ReviewResDTO;
 import com.example.umc10th.domain.review.entity.Review;
 import com.example.umc10th.domain.review.repository.ReviewRepository;
+
 import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,7 +50,8 @@ public class ReviewService {
 
         // 유저 조회
         Member member = memberRepository.findById(request.getUserId())
-                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() ->
+                        new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
         // 리뷰 생성
         Review review = ReviewConverter.toEntity(request, store, member);
@@ -62,42 +66,69 @@ public class ReviewService {
     public ReviewResDTO.MyReviewListResDTO getMyReviews(
             ReviewReqDTO.MyReviewListReqDTO request
     ) {
+
         int size = request.getSize();
-        Pageable pageable = PageRequest.of(0, size + 1);
 
-        List<Review> reviews;
+        Pageable pageable = PageRequest.of(0, size);
 
+        Slice<Review> reviewSlice;
+
+        // 별점순 정렬
         if ("STAR".equalsIgnoreCase(request.getSort())) {
-            if (request.getCursorStar() == null || request.getCursorId() == null) {
-                reviews = reviewRepository.findByUserIdOrderByStarDescReviewIdDesc(
-                        request.getUserId(),
-                        pageable
-                );
+
+            // 첫 페이지
+            if (request.getCursorStar() == null
+                    || request.getCursorId() == null) {
+
+                reviewSlice =
+                        reviewRepository.findByUserIdOrderByStarDescReviewIdDesc(
+                                request.getUserId(),
+                                pageable
+                        );
+
             } else {
-                reviews = reviewRepository.findMyReviewsByStarCursor(
-                        request.getUserId(),
-                        request.getCursorStar(),
-                        request.getCursorId(),
-                        pageable
-                );
+
+                // 다음 페이지
+                reviewSlice =
+                        reviewRepository.findMyReviewsByStarCursor(
+                                request.getUserId(),
+                                request.getCursorStar(),
+                                request.getCursorId(),
+                                pageable
+                        );
             }
+
         } else {
+
+            // ID순 첫 페이지
             if (request.getCursorId() == null) {
-                reviews = reviewRepository.findByUserIdOrderByReviewIdDesc(
-                        request.getUserId(),
-                        pageable
-                );
+
+                reviewSlice =
+                        reviewRepository.findByUserIdOrderByReviewIdDesc(
+                                request.getUserId(),
+                                pageable
+                        );
+
             } else {
-                reviews = reviewRepository.findByUserIdAndReviewIdLessThanOrderByReviewIdDesc(
-                        request.getUserId(),
-                        request.getCursorId(),
-                        pageable
-                );
+
+                // ID순 다음 페이지
+                reviewSlice =
+                        reviewRepository
+                                .findByUserIdAndReviewIdLessThanOrderByReviewIdDesc(
+                                        request.getUserId(),
+                                        request.getCursorId(),
+                                        pageable
+                                );
             }
         }
 
-        boolean hasNext = reviews.size() > size;
+        List<Review> reviews = reviewSlice.getContent();
 
-        return ReviewConverter.toMyReviewListDTO(reviews, hasNext);
+        boolean hasNext = reviewSlice.hasNext();
+
+        return ReviewConverter.toMyReviewListDTO(
+                reviews,
+                hasNext
+        );
     }
 }

@@ -2,29 +2,28 @@ package com.example.umc10th.domain.review.repository;
 
 import com.example.umc10th.domain.review.entity.Review;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     // ID순 첫 페이지
-    List<Review> findByUserIdOrderByReviewIdDesc(
+    Slice<Review> findByUserIdOrderByReviewIdDesc(
             Long userId,
             Pageable pageable
     );
 
     // ID순 다음 페이지
-    List<Review> findByUserIdAndReviewIdLessThanOrderByReviewIdDesc(
+    Slice<Review> findByUserIdAndReviewIdLessThanOrderByReviewIdDesc(
             Long userId,
             Long cursorId,
             Pageable pageable
     );
 
     // 별점순 첫 페이지
-    List<Review> findByUserIdOrderByStarDescReviewIdDesc(
+    Slice<Review> findByUserIdOrderByStarDescReviewIdDesc(
             Long userId,
             Pageable pageable
     );
@@ -39,7 +38,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
             )
             order by r.star desc, r.reviewId desc
             """)
-    List<Review> findMyReviewsByStarCursor(
+    Slice<Review> findMyReviewsByStarCursor(
             @Param("userId") Long userId,
             @Param("cursorStar") Float cursorStar,
             @Param("cursorId") Long cursorId,
