@@ -1,0 +1,25 @@
+package com.example.umc10th.domain.member.exception.code;
+
+import com.example.umc10th.global.apiPayload.code.BaseErrorCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+
+@Getter
+@RequiredArgsConstructor
+public enum MemberErrorCode implements BaseErrorCode {
+
+    MEMBER_ERROR_CODE(HttpStatus.NOT_FOUND,
+            "MEMBER404_1",
+            "해당 사용자를 찾을 수 없습니다."),
+
+
+    NOT_SUPPORT_SOCIAL_PROVIDER(HttpStatus.BAD_REQUEST,
+            "MEMBER4002",
+            "지원하지 않는 소셜 로그인 플랫폼입니다."),
+    ;
+
+    private final HttpStatus httpStatus;
+    private final String code;
+    private final String message;
+}
