@@ -1,5 +1,6 @@
 package com.example.umc10th.domain.member.entity;
 
+import com.example.umc10th.domain.member.enums.SocialType;
 import com.example.umc10th.domain.mission.entity.Location;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -34,13 +35,20 @@ public class Member {
     private String address;
     private Integer point;
 
+    @Enumerated(EnumType.STRING)
+    private SocialType socialType;
+
+    private String socialUid;
+
     @Builder
-    public Member(String name, String email, String password, String phoneNumber, String address) {
+    public Member(String name, String email, String password, String phoneNumber, String address, SocialType socialType, String socialUid) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.point = 0;
+        this.socialType = socialType;
+        this.socialUid = socialUid;
     }
 }

@@ -3,6 +3,7 @@ package com.example.umc10th.domain.member.converter;
 import com.example.umc10th.domain.member.dto.MemberResponseDTO;
 import com.example.umc10th.domain.member.entity.Member;
 import com.example.umc10th.domain.mission.entity.Mission;
+import com.example.umc10th.global.security.dto.OAuthDTO;
 
 import java.util.List;
 
@@ -24,6 +25,22 @@ public class MemberConverter {
                 .point(member.getPoint())
                 .successCount(successCount)
                 .availableMissions(availableMissions.size())
+                .build();
+    }
+
+    public static Member toMember(OAuthDTO dto) {
+        return Member.builder()
+                .name(dto.getName())
+                .email(dto.getSocialEmail())
+                .password(null)
+                .socialType(dto.getSocialType())
+                .socialUid(dto.getSocialUid())
+                .build();
+    }
+
+    public static MemberResponseDTO.LoginResultDto toLogin(String accessToken) {
+        return MemberResponseDTO.LoginResultDto.builder()
+                .accessToken(accessToken)
                 .build();
     }
 }

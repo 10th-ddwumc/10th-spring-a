@@ -11,8 +11,7 @@ import com.example.umc10th.domain.mission.entity.Mission;
 import com.example.umc10th.domain.mission.enums.MissionStatus;
 import com.example.umc10th.domain.mission.repository.MemberMissionRepository;
 import com.example.umc10th.domain.mission.repository.MissionRepository;
-import com.example.umc10th.domain.mission.repository.StoreRepository;
-import com.example.umc10th.global.security.JwtTokenProvider;
+import com.example.umc10th.global.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,18 +24,20 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MemberService {
+
     private final MemberRepository memberRepository;
     private final MissionRepository missionRepository;
     private final MemberMissionRepository memberMissionRepository;
-    private final StoreRepository storeRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtUtil jwtUtil;
 
     // 마이페이지
     public MemberResponseDTO.GetInfo getInfo(MemberRequestDTO.GetInfo dto) {
         Long memberId = dto.id();
+
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_ERROR_CODE));
+
         return MemberConverter.toGetInfo(member);
     }
 
@@ -69,10 +70,11 @@ public class MemberService {
         Member member = memberRepository.findById(dto.id())
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_ERROR_CODE));
 
-        // 성공한 미션 개수 조회
-        Integer successCount = memberMissionRepository.countByMemberAndStatus(member, MissionStatus.COMPLETE);
+        Integer successCount = memberMissionRepository.countByMemberAndStatus(
+                member,
+                MissionStatus.COMPLETE
+        );
 
-        // 사용자의 지역 정보 가져오기
         List<Mission> availableMissions = missionRepository.findAvailableMissionsByLocation(
                 member.getLocation(),
                 member.getId()
@@ -91,7 +93,7 @@ public class MemberService {
             throw new RuntimeException("이메일 또는 비밀번호가 일치하지 않습니다.");
         }
 
-        String accessToken = jwtTokenProvider.createAccessToken(member.getId(), member.getEmail());
+        String accessToken = jwtUtil.createAccessToken(member);
 
         return MemberResponseDTO.LoginResultDto.builder()
                 .memberId(member.getId())
