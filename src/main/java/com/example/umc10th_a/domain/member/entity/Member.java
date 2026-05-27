@@ -24,6 +24,10 @@ public class Member extends BaseEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
+    // JWT 일반 로그인용 비밀번호
+    @Column(name = "password", nullable = false)
+    private String password;
+
     @Builder.Default
     @Column(name = "gender", nullable = false)
     @Enumerated(EnumType.STRING)
